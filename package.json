@@ -3,7 +3,7 @@
   "description": "Invasive Fish",
   "author": "RK",
   "dependencies": {
-    "express": "*",
+    "express": "3",
     "gzippo": "*"
   }
 }
