@@ -13,13 +13,32 @@
 	}
 
 </style>
-<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&effect=emboss' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="/vendor/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="css/main.css">
-	<title></title>
+	<title>Invasive Fish, Canada</title>
 </head>
 <body ng-app="myApp">
-	<div class="container" ng-controller="TextAreaWithLimitCtrl">
+
+	<div class="navbar navbar-default">
+	  <div class="navbar-header">
+	    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+	      <span class="icon-bar"></span>
+	      <span class="icon-bar"></span>
+	      <span class="icon-bar"></span>
+	    </button>
+	    <a class="navbar-brand font-effect-emboss" href="#">Reported Observations of Aquatic Invasive Species</a>
+	  </div>
+	  <div class="navbar-collapse collapse navbar-responsive-collapse">
+	   
+	    <form class="navbar-form navbar-right">
+	      <input type="text" class="form-control col-lg-8" placeholder="Search" ng-model="searchFish">
+	    </form>
+	    
+	  </div>
+	</div>
+
+	<div class="container" ng-controller="MapCtrl">
 		<div class="row">
 		
 		<div class="col-md-7">
@@ -28,25 +47,29 @@
 					<rectangle bounds="getBounds($index); boundsArray[$index];" fill="'#FFFFFF .5'" visible="map.showMap[$index]" ng-init="map.showMap[$index]=false"></rectangle>
 				</div>
 			</google-map>
+
+			<footer id="footer" ng-show="wikiHTML">
+				<div id ="wiki" ng-click="wikiHTML = null"> 
+					<div class="row">
+						<div class="col-md-8">		
+							<div ng-bind-html="wikiHTML"></div>
+						</div>
+						<div class="col-md-4">
+							<div class="btn btn-success btn-lg" ng-if="whenInvaded"> {{ whenInvaded }}</div>	
+						</div>
+					</div>
+				
+				</div>
+			</footer>
+
 		</div>
 		<div class="col-md-5">
 			<div id ="fishlist" >
-				<div id ="item" class="btn btn-default" ng-repeat="species in data.layers"  ng-class="{'button': !map.showMap[$index], 'button active': map.showMap[$index]}" ng-click="map.showMap[$index]=!map.showMap[$index]; getWiki($index);">{{ species.name }}</div>
+				<div id ="item" class="btn btn-default" ng-repeat="species in data.layers | filter:searchFish"  ng-class="{'button': !map.showMap[$index], 'button active': map.showMap[$index]}" ng-click="map.showMap[$index]=!map.showMap[$index]; getWiki($index);">{{ species.name }}</div>
 			</div>
 
 		</div>
 		</div>	
-		<div id ="wiki"> 
-			<div class="row">
-				<div class="col-md-10">
-					<div ng-bind-html="wikiHTML"></div>
-				</div>
-				<div class="col-md-2">
-					<div class="btn btn-success btn-lg" ng-if="whenInvaded"> {{ whenInvaded }}</div>	
-				</div>
-			</div>
-			
-		</div>
 			
 	</div>
 
@@ -66,12 +89,12 @@
 	// };
 
 	/**
-	*  Module: TextAreaWithLimitCtrl
+	*  Module: MapCtrl
 	*
 	* Description
 	*/
 	angular.module('myApp', ['google-maps'])
-		.controller('TextAreaWithLimitCtrl', function($scope, $window, $log, $sce, $timeout, $http){
+		.controller('MapCtrl', function($scope, $window, $log, $sce, $timeout, $http){
 
 			$http({method: 'GET', url: 'http://geoportal-geoportail.gc.ca/arcgis/rest/services/Reported_Observations_Aquatic_Invasive_Species_ENG/MapServer/layers?f=pjson'}).
 			  success(function(data, status, headers, config) {
@@ -114,14 +137,7 @@
 			  });
 
 			
-			$scope.getWhen = function (id) {
-				if($scope.data.layers[id].timeInfo.timeExtent) {
-					var date = new Date($scope.data.layers[id].timeInfo.timeExtent[0]);
-					return date.getFullYear()
-				} else {
-					return "unknown";
-				};
-			};
+			
 
 			$scope.getBounds = function (id) {
 				if($scope.data.layers[id].extent) {
@@ -162,6 +178,15 @@
 		    $scope.wikiArray = [];
 
 		    $scope.getWiki = function(id) {
+
+		    	$scope.getWhen = function (id) {
+					if($scope.data.layers[id].timeInfo.timeExtent) {
+						var date = new Date($scope.data.layers[id].timeInfo.timeExtent[0]);
+						return date.getFullYear()
+					} else {
+						return "unknown";
+					};
+				};
 		    	
 		    	// get year invaded
 		    	$scope.whenInvaded = "Year Invaded: " + $scope.getWhen(id); 
@@ -174,7 +199,7 @@
 
 
 		    	if($scope.wikiArray[id]){
-		    		$scope.wikiHTML = $sce.trustAsHtml($scope.wiki);
+		    		$scope.wikiHTML = $sce.trustAsHtml($scope.wikiArray[id].toString());
 		    	}
 		    	else {
 		    		$http({method: 'GET', url: 'https://cors-anywhere.herokuapp.com/http://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles='+ $scope.data.layers[id].name}).
