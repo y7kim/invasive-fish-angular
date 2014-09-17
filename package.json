@@ -1,0 +1,9 @@
+{
+  "name": "invasivefish",
+  "description": "Invasive Fish",
+  "author": "RK",
+  "dependencies": {
+    "express": "*",
+    "gzippo": "*"
+  }
+}
