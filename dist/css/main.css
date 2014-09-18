@@ -4,8 +4,6 @@ body{
 
 }
 
-
-
 .angular-google-map-container { 
 	height: 600px;
 	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.4);
@@ -19,7 +17,7 @@ body{
 }
 
 .navbar-default .navbar-brand {
-	color: #67777D;
+	color: #ddd;
 	font-size: 1.4em;
 }
 
@@ -96,8 +94,9 @@ body{
   }
 }
 
-@media (min-width: 768px) {
+
+@media (min-width: 1024px) {
 	.navbar-default .navbar-brand {
-	font-size: 1.8em;
+	font-size: 2em;
 	}
 }
