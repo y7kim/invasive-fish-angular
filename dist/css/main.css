@@ -12,9 +12,6 @@ body{
 }
 
 #fishlist {
-	position: relative;
-	float: left;
-	height: auto;
 }
 
 .navbar-form {
@@ -23,7 +20,7 @@ body{
 
 .navbar-default .navbar-brand {
 	color: #67777D;
-	font-size: 1.6em;
+	font-size: 1.4em;
 }
 
 #item {
@@ -87,6 +84,11 @@ body{
   outline: 1px solid slategrey;
 }
 
+@media (min-width: 992px) {
+  .container {
+    width: 100%;
+  }
+}
 
 @media (min-width: 1200px) {
   .container {
@@ -96,6 +98,6 @@ body{
 
 @media (min-width: 768px) {
 	.navbar-default .navbar-brand {
-	font-size: 2em;
+	font-size: 1.8em;
 	}
 }

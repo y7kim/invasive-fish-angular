@@ -41,7 +41,14 @@
 	<div class="container" ng-controller="MapCtrl">
 		<div class="row">
 		
-		<div class="col-md-7">
+		<div class="col-md-5 col-md-push-7">
+			<div id ="fishlist" >
+				<div id ="item" class="btn btn-default" ng-repeat="species in data.layers | filter:searchFish"  ng-class="{'button': !map.showMap[$index], 'button active': map.showMap[$index]}" ng-click="map.showMap[$index]=!map.showMap[$index]; getWiki($index);">{{ species.name }}</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-7 col-md-pull-5">
 			<google-map center="map.center" zoom="map.zoom" bounds="map.bounds">
 				<div ng-repeat="species in data.layers">
 					<rectangle bounds="getBounds($index); boundsArray[$index];" fill="'#FFFFFF .5'" visible="map.showMap[$index]" ng-init="map.showMap[$index]=false"></rectangle>
@@ -63,12 +70,7 @@
 			</footer>
 
 		</div>
-		<div class="col-md-5">
-			<div id ="fishlist" >
-				<div id ="item" class="btn btn-default" ng-repeat="species in data.layers | filter:searchFish"  ng-class="{'button': !map.showMap[$index], 'button active': map.showMap[$index]}" ng-click="map.showMap[$index]=!map.showMap[$index]; getWiki($index);">{{ species.name }}</div>
-			</div>
-
-		</div>
+		
 		</div>	
 			
 	</div>
